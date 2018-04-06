@@ -1,0 +1,49 @@
+#Wordpress container
+version: '3'
+services:
+#Database service
+  db:
+    image: mariadb:latest
+    container_name: db-01
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: somewordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+    volumes:
+      - "./mysql/datadir:/var/lib/mysql"
+      - "./mysql/backup_mysql:/backup:ro"
+#      - /etc/localtime:/etc/localtime:ro
+#      - /etc/timezone:/etc/timezone:ro
+
+    networks:
+      - default
+
+#Wordpress service
+  wordpress:
+    image: wordpress:latest
+    container_name: wp_test
+    restart: always
+    environment:
+      VIRTUAL_HOST: change_me.com
+#     VIRTUAL_PORT: 8080
+      LETSENCRYPT_HOST: change_me.com
+      LETSENCRYPT_EMAIL: mymail@mail.com
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress
+
+    depends_on:
+      - db
+#    ports:
+#      - "80:80"
+    networks:
+      - webproxy
+      - default
+
+networks:
+  webproxy:
+    external:
+      name: webproxy
