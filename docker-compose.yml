@@ -4,7 +4,7 @@ services:
 #Database service
   db:
     image: mariadb:latest
-    container_name: db-01
+    container_name: db-${CONTAINER_NAME}
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -24,7 +24,7 @@ services:
 #Wordpress service
   wordpress:
     image: wordpress:latest
-    container_name: wp_test
+    container_name: wp-${CONTAINER_NAME}
     restart: always
     environment:
       VIRTUAL_HOST: ${VIRTUAL_HOST}
