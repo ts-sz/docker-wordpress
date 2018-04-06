@@ -7,10 +7,10 @@ services:
     container_name: db-01
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: somewordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
     volumes:
       - "./mysql/datadir:/var/lib/mysql"
@@ -27,18 +27,17 @@ services:
     container_name: wp_test
     restart: always
     environment:
-      VIRTUAL_HOST: change_me.com
-#     VIRTUAL_PORT: 8080
-      LETSENCRYPT_HOST: change_me.com
-      LETSENCRYPT_EMAIL: mymail@mail.com
+      VIRTUAL_HOST: ${VIRTUAL_HOST}
+#     VIRTUAL_PORT: ${VIRTUAL_PORT}
+      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
 
     depends_on:
       - db
-#    ports:
-#      - "80:80"
+
     networks:
       - webproxy
       - default
