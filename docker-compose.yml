@@ -65,6 +65,7 @@ services:
 # pure-pw passwd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m 
 
   adminer:
+    container_name: adminer-${CONTAINER_NAME}
     image: adminer
     restart: unless-stopped
     ports:
