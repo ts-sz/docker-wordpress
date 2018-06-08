@@ -60,16 +60,14 @@ services:
       ADDED_FLAGS: "-g root"
     restart: unless-stopped
 
-  service:
-    build: .
-    build:
-      context: ./alpine/
-    container_name: service-${CONTAINER_NAME}
+  adminer:
+    image: adminer
     restart: unless-stopped
-    depends_on:
-      - db
-      - wordpress
-      - ftp-server
+    ports:
+      - 8080:8080
+    environment:
+      ADMINER_DESIGN="nette"
+      ADMINER_PLUGINS="tables-filter tinymce"
 
 networks:
   webproxy:
