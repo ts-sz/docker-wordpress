@@ -56,7 +56,7 @@ services:
       - "./ftpd/passwd:/etc/pure-ftpd/passwd"
 #      - "./ftpd/ssl:/etc/ssl/private/"
     environment:
-      PUBLICHOST: ${VIRTUAL_HOST}
+      PUBLICHOST: ${HOSTNAME}
       ADDED_FLAGS: "-g root"
     restart: unless-stopped
 # USER create in FTP Server:
