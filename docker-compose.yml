@@ -27,9 +27,9 @@ services:
     container_name: wp-${CONTAINER_NAME}
     restart: unless-stopped
     environment:
-      VIRTUAL_HOST: ${VIRTUAL_HOST}
+      VIRTUAL_HOST: ${HOSTNAME}
 #     VIRTUAL_PORT: ${VIRTUAL_PORT}
-      LETSENCRYPT_HOST: ${LETSENCRYPT_HOST}
+      LETSENCRYPT_HOST: ${HOSTNAME}
       LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: ${MYSQL_USER}
