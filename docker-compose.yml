@@ -50,7 +50,7 @@ services:
     image: stilliard/pure-ftpd:hardened
     ports:
       - "${FTP_PORT}:21"
-      - "${FTP_RANGE}:30000-30009"
+      - ${FTP_RANGE}
     volumes:
       - "./html:/home/ftpusers/www-data"
       - "./ftpd/passwd:/etc/pure-ftpd/passwd"
