@@ -57,7 +57,7 @@ services:
 #      - "./ftpd/ssl:/etc/ssl/private/"
     environment:
       PUBLICHOST: ${VIRTUAL_HOST}
-      ADDED_FLAGS: "-g"
+      ADDED_FLAGS: "-g root"
     restart: unless-stopped
 # USER create in FTP Server:
 # pure-pw useradd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 31 -g 31 -d /home/ftpusers/www-data
