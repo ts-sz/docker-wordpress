@@ -15,8 +15,8 @@ services:
     volumes:
       - "./mysql/datadir:/var/lib/mysql"
       - "./mysql/backup_mysql:/backup:ro"
-      - /etc/localtime:/etc/localtime:ro
-      - /etc/timezone:/etc/timezone:ro
+#      - /etc/localtime:/etc/localtime:ro
+#      - /etc/timezone:/etc/timezone:ro
 
     networks:
       - default
