@@ -4,6 +4,7 @@ services:
 #Database service
   db:
     image: mariadb:latest
+#    command: mysqld --innodb-buffer-pool-size=64M    
     container_name: db-${CONTAINER_NAME}
     restart: unless-stopped
     environment:
@@ -38,6 +39,7 @@ services:
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
     volumes:
       - "./html:/var/www/html"
+      - "./config/upload.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
     depends_on:
       - db
 
