@@ -7,7 +7,7 @@
 #version	    :0.1
 #notes		    :
 #===================
-BASE="/tmp"
+BASE="/home/virtual/dockers/web"
 
 read -rp "Website name please?: " website_name
 MYSQL_ROOT_PASSWORD="$(pwgen -n 15 1)"
