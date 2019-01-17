@@ -7,7 +7,7 @@
 #version	    :0.1
 #notes		    :
 #===================
-BASE="/home/virtual/dockers/web"
+BASE="/tmp"
 
 read -rp "Website name please?: " website_name
 MYSQL_ROOT_PASSWORD="$(pwgen -n 15 1)"
@@ -22,9 +22,9 @@ echo -e "Mysql database:\t\t${MYSQL_DATABASE}"
 echo -e "Mysql User:\t\t${MYSQL_USER}"
 echo -e "Mysql user password:\t${MYSQL_PASSWORD}"
 
-cd "${BASE}"
-git clone git@github.com:ts-sz/docker-wordpress.git ${website_name}
-cd "${website_name}"
+cd "${BASE}" || exit 1
+git clone https://github.com/ts-sz/docker-wordpress.git ${website_name}
+cd "${website_name}" || exit 1
 cp env.template .env
 sed -i "/CONTAINER_NAME*/c\\CONTAINER_NAME=${website_name}" ".env"
 sed -i "/WEBSITE_NAME*/c\\WEBSITE_NAME=${website_name}" ".env"
