@@ -40,12 +40,23 @@ services:
     volumes:
       - "./html:/var/www/html"
       - "./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
+
+    labels:
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:gorelkine.com, www.gorelkine.com"
+      - "traefik.frontend.headers.SSLHost=gorelkine.com"
+      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.basic.port=80"
+      - "traefik.basic.protocol=http"
+      - "traefik.tags=gorelkine,wordpress"
+
     depends_on:
       - db
 
     networks:
-      - webproxy
-      - default
+        - web
+        - default
 
   adminer:
     container_name: adminer-${CONTAINER_NAME}
@@ -58,6 +69,5 @@ services:
       ADMINER_PLUGINS: "tables-filter tinymce"
 
 networks:
-  webproxy:
-    external:
-      name: webproxy
+    web:
+        external: true
