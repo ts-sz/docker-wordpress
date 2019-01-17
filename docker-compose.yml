@@ -42,6 +42,7 @@ services:
       - "./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
 
     labels:
+      - "traefik.backend=my_backend_name"    
       - "traefik.docker.network=web"
       - "traefik.enable=true"
       - "traefik.basic.frontend.rule=Host:monsite.com, www.monsite.com"
