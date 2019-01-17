@@ -22,7 +22,7 @@ services:
       - "traefik.backend=${WEBSITE_NAME}"       
       - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.basic.frontend.rule=Host:${WEBSITE_NAME} #, www.${WEBSITE_NAME}"
+      - "traefik.basic.frontend.rule=Host:${WEBSITE_NAME}" #, www.${WEBSITE_NAME}"
 #      - "traefik.frontend.headers.SSLHost=${WEBSITE_NAME}"
 #      - "traefik.frontend.headers.SSLRedirect=true"
       - "traefik.basic.port=${BACKEND_PORT}"
