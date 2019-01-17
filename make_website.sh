@@ -22,7 +22,7 @@ echo -e "Mysql database:\t\t${MYSQL_DATABASE}"
 echo -e "Mysql User:\t\t${MYSQL_USER}"
 echo -e "Mysql user password:\t${MYSQL_PASSWORD}"
 
-cd {$BASE}
+cd "${$BASE}"
 git clone git@github.com:ts-sz/docker-wordpress.git ${website_name}
 cd "${website_name}"
 cp env.template .env
