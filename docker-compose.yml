@@ -1,10 +1,41 @@
 #Wordpress container
 version: '3'
 services:
+#docker exec some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
+#Wordpress service
+  wordpress:
+    image: wordpress:latest
+    container_name: wp-${CONTAINER_NAME}
+    restart: unless-stopped
+    environment:
+      WORDPRESS_DB_HOST: db:3306
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+    volumes:
+      - "./html:/var/www/html"
+      - "./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
+    labels:
+      - "traefik.backend=${WEBSITE_NAME}"       
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:${WEBSITE_NAME}, www.${WEBSITE_NAME}"
+      - "traefik.frontend.headers.SSLHost=${WEBSITE_NAME}"
+      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.basic.port=${BACKEND_PORT}"
+      - "traefik.basic.protocol=http"
+      - "traefik.tags=${WEBSITE_NAME},wordpress"      
+    depends_on:
+      - db
+
+    networks:
+      - web
+      - default
 #Database service
   db:
     image: mariadb:latest
-#    command: mysqld --innodb-buffer-pool-size=64M    
+#    command: mysqld --innodb-buffer-pool-size=64M
     container_name: db-${CONTAINER_NAME}
     restart: unless-stopped
     environment:
@@ -21,53 +52,29 @@ services:
 
     networks:
       - default
-#docker exec some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql
-#Wordpress service
-  wordpress:
-    image: wordpress:latest
-    container_name: wp-${CONTAINER_NAME}
-    restart: unless-stopped
-    environment:
-      VIRTUAL_HOST: ${HOSTNAME}
-#     VIRTUAL_PORT: ${VIRTUAL_PORT}
-      LETSENCRYPT_HOST: ${HOSTNAME}
-      LETSENCRYPT_EMAIL: ${LETSENCRYPT_EMAIL}
-      WORDPRESS_DB_HOST: db:3306
-      WORDPRESS_DB_USER: ${MYSQL_USER}
-      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
-      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
-    volumes:
-      - "./html:/var/www/html"
-      - "./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
-
-    labels:
-      - "traefik.backend=my_backend_name"    
-      - "traefik.docker.network=web"
-      - "traefik.enable=true"
-      - "traefik.basic.frontend.rule=Host:monsite.com, www.monsite.com"
-      - "traefik.frontend.headers.SSLHost=monsite.com"
-      - "traefik.frontend.headers.SSLRedirect=true"
-      - "traefik.basic.port=80"
-      - "traefik.basic.protocol=http"
-      - "traefik.tags=gorelkine,wordpress"
-
-    depends_on:
-      - db
-
-    networks:
-        - web
-        - default
-
+            
   adminer:
     container_name: adminer-${CONTAINER_NAME}
     image: adminer
     restart: unless-stopped
-    ports:
-      - ${ADMINER_PORT}:8080
     environment:
       ADMINER_DESIGN: "nette"
       ADMINER_PLUGINS: "tables-filter tinymce"
+    labels:
+      - "traefik.backend=${ADMINER_NAME}.${WEBSITE_NAME}"       
+      - "traefik.docker.network=web"
+      - "traefik.enable=true"
+      - "traefik.basic.frontend.rule=Host:${ADMINER_NAME}.${WEBSITE_NAME}"
+#      - "traefik.frontend.headers.SSLHost=gorelkine.com"
+#      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.basic.port=${ADMINER_PORT}"
+      - "traefik.basic.protocol=http"
+      - "traefik.tags=adminer,db"
+      - "traefik.frontend.auth.basic.usersFile=/shared/htpasswd_gorelkine"          
+
+    networks:
+      - web
+      - default
 
 networks:
     web:
