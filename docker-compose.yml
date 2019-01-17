@@ -13,6 +13,8 @@ services:
       WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
       WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+      TZ: ${TZ}
+
     volumes:
       - "./html:/var/www/html"
       - "./config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
@@ -20,9 +22,9 @@ services:
       - "traefik.backend=${WEBSITE_NAME}"       
       - "traefik.docker.network=web"
       - "traefik.enable=true"
-      - "traefik.basic.frontend.rule=Host:${WEBSITE_NAME}, www.${WEBSITE_NAME}"
-      - "traefik.frontend.headers.SSLHost=${WEBSITE_NAME}"
-      - "traefik.frontend.headers.SSLRedirect=true"
+      - "traefik.basic.frontend.rule=Host:${WEBSITE_NAME} #, www.${WEBSITE_NAME}"
+#      - "traefik.frontend.headers.SSLHost=${WEBSITE_NAME}"
+#      - "traefik.frontend.headers.SSLRedirect=true"
       - "traefik.basic.port=${BACKEND_PORT}"
       - "traefik.basic.protocol=http"
       - "traefik.tags=${WEBSITE_NAME},wordpress"      
@@ -43,12 +45,11 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      TZ: ${TZ}
 
     volumes:
       - "./mysql/datadir:/var/lib/mysql"
       - "./mysql/backup_mysql:/backup:ro"
-#      - /etc/localtime:/etc/localtime:ro
-#      - /etc/timezone:/etc/timezone:ro
 
     networks:
       - default
@@ -60,6 +61,7 @@ services:
     environment:
       ADMINER_DESIGN: "nette"
       ADMINER_PLUGINS: "tables-filter tinymce"
+      TZ: ${TZ}
     labels:
       - "traefik.backend=${ADMINER_NAME}.${WEBSITE_NAME}"       
       - "traefik.docker.network=web"
