@@ -26,4 +26,6 @@ save modifications with `CTRL + X`
 ## Launch dockers
 `docker-compose -d up` or with alias: `dc -d up`
 
+## Backup Database
+`docker exec some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql`
 ## Enjoy
