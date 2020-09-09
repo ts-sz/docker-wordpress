@@ -28,4 +28,15 @@ save modifications with `CTRL + X`
 
 ## Backup Database
 `docker exec some-mariadb sh -c 'exec mysqldump --all-databases -uroot -p"$MYSQL_ROOT_PASSWORD"' > /some/path/on/your/host/all-databases.sql`
+
+## Manager FTP Users
+
+### USER create in FTP Server
+`pure-pw useradd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 33 -g 33 -d /home/ftpusers/html`
+
+### Change password
+
+`pure-pw passwd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m`
+
 ## Enjoy
+

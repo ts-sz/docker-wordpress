@@ -13,7 +13,7 @@ services:
       WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
       TZ: ${TZ}
     volumes:
-      - "./html:/var/www/html"
+      - "html:/var/www/html"
       - "./php_config/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:ro"
     labels:
       - "traefik.enable=true"
@@ -55,7 +55,7 @@ services:
       - default
             
   adminer:
-    container_name: adminer-${CONTAINER_NAME}
+    container_name: adminer_${SERVICE}
     image: adminer
     restart: unless-stopped
     environment:
@@ -83,34 +83,30 @@ services:
       - web
       - default
 
-  ftp-server:
-    container_name: ftp-server
+  ftp:
+    container_name: ftp_${SERVICE}
     image: stilliard/pure-ftpd:hardened
     ports:
-      - "2121:21"
-      - "30000-30009:30000-30009"
+      - "${FTP_PORT}:21"
+      - "${FTP_PASV_START}-${FTP_PASV_END}:${FTP_PASV_START}-${FTP_PASV_END}"
     volumes:
-      - "./html:/var/www/html"
+      - "html:/home/ftpusers/html"
       - "./ftpd/passwd:/etc/pure-ftpd/passwd"
 #      - "./ftpd/ssl:/etc/ssl/private/"
     environment:
-      PUBLICHOST: "51.15.19.23"
+      PUBLICHOST: "SERVER.IP.ADRESS"
 #      ADDED_FLAGS: "-g root -z"
       FTP_USER_UID: 33
       FTP_USER_GID: 33
-      FTP_USER_NAME: "Maxou82"
-      FTP_USER_PASS: "ouCh4que"
-      FTP_USER_HOME: "/var/www/html"
+      FTP_USER_NAME: ${FTP_USERNAME}
+      FTP_USER_PASS: ${FTP_PASSWORD}
+      FTP_USER_HOME: "/home/ftpusers/"
     restart: unless-stopped
-# USER create in FTP Server:
-# pure-pw useradd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m -u 33 -g 33 -d /home/ftpusers/www-data
-# Change password:
-# pure-pw passwd my_user -f /etc/pure-ftpd/passwd/pureftpd.passwd -m 
 volumes:
-  logs-directory:
+  html:
     driver_opts:
       type: none
-      device: ${PWD}/logs
+      device: ${PWD}/html
       o: bind
 
 networks:
